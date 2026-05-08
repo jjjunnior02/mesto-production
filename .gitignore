@@ -1,29 +1,17 @@
-# Dependencies
-# Игнорируем папку node_modules (зависимости проекта, устанавливаются через npm install)
 node_modules/
 
-# Build output
-# Игнорируем папку dist (результат сборки, не хранится в репозитории)
 dist/
 
-# IDE
-# Игнорируем настройки редакторов (VS Code, IntelliJ IDEA)
 .vscode/
 .idea/
 
-# OS
-# Игнорируем системные файлы операционных систем
 .DS_Store
 Thumbs.db
 
-# Logs
-# Игнорируем лог-файлы отладки
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Env
-# Игнорируем файлы с переменными окружения (секреты, ключи API)
 .env
 .env.local

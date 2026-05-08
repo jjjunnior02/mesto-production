@@ -1,19 +1,11 @@
-/*
-  Файл index.js является точкой входа в наше приложение
-  и только он должен содержать логику инициализации нашего приложения
-  используя при этом импорты из других файлов
-
-  Из index.js не допускается что то экспортировать
-*/
-
 import "../pages/index.css";
 import { initialCards } from "./cards.js";
 import { createCardElement, deleteCard, likeCard } from "./components/card.js";
 import { openModalWindow, closeModalWindow, setCloseModalWindowEventListeners } from "./components/modal.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
 
-// DOM узлы
 const placesWrap = document.querySelector(".places__list");
+
 const profileFormModalWindow = document.querySelector(".popup_type_edit");
 const profileForm = profileFormModalWindow.querySelector(".popup__form");
 const profileTitleInput = profileForm.querySelector(".popup__input_type_name");
@@ -70,6 +62,7 @@ const handleAvatarFromSubmit = (evt) => {
 
 const handleCardFormSubmit = (evt) => {
   evt.preventDefault();
+
   placesWrap.prepend(
     createCardElement(
       {
@@ -87,7 +80,6 @@ const handleCardFormSubmit = (evt) => {
   closeModalWindow(cardFormModalWindow);
 };
 
-// EventListeners
 profileForm.addEventListener("submit", handleProfileFormSubmit);
 cardForm.addEventListener("submit", handleCardFormSubmit);
 avatarForm.addEventListener("submit", handleAvatarFromSubmit);
@@ -111,7 +103,6 @@ openCardFormButton.addEventListener("click", () => {
   openModalWindow(cardFormModalWindow);
 });
 
-// отображение карточек
 initialCards.forEach((data) => {
   placesWrap.append(
     createCardElement(data, {
@@ -122,7 +113,6 @@ initialCards.forEach((data) => {
   );
 });
 
-//настраиваем обработчики закрытия попапов
 const allPopups = document.querySelectorAll(".popup");
 allPopups.forEach((popup) => {
   setCloseModalWindowEventListeners(popup);

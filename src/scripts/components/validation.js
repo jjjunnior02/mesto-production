@@ -1,32 +1,51 @@
-// --- Приватные функции (не экспортируются) ---
-// Вспомогательные функции для работы валидации, используются только внутри модуля
-
-// Функция отображения ошибки для конкретного поля ввода
 function showInputError(formEl, inputEl, errorMsg, settings) {
-  const errorSpan = formEl.querySelector(`#${inputEl.id}-error`); // Находим span для ошибки
-  inputEl.classList.add(settings.inputErrorClass); // Добавляем класс ошибки полю
-  errorSpan.textContent = errorMsg; // Устанавливаем текст ошибки
-  errorSpan.classList.add(settings.errorClass); // Показываем ошибку (добавляем класс видимости)
+  const errorSpan = formEl.querySelector(`#${inputEl.id}-error`);
+  inputEl.classList.add(settings.inputErrorClass);
+  errorSpan.textContent = errorMsg;
+  errorSpan.classList.add(settings.errorClass);
 }
 
-// Функция скрытия ошибки для конкретного поля ввода
 function hideInputError(formEl, inputEl, settings) {
-  const errorSpan = formEl.querySelector(`#${inputEl.id}-error`); // Находим span для ошибки
-  inputEl.classList.remove(settings.inputErrorClass); // Убираем класс ошибки у поля
-  errorSpan.textContent = ""; // Очищаем текст ошибки
-  errorSpan.classList.remove(settings.errorClass); // Скрываем ошибку (убираем класс видимости)
+  const errorSpan = formEl.querySelector(`#${inputEl.id}-error`);
+  inputEl.classList.remove(settings.inputErrorClass);
+  errorSpan.textContent = "";
+  errorSpan.classList.remove(settings.errorClass);
 }
 
-// Функция проверки валидности одного поля ввода
+const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
+
+const doubleSpaceRegex = /  /;
+const doubleHyphenRegex = /--/;
+const letterRegex = /[a-zA-Zа-яА-ЯёЁ]/;
+
 function checkInputValidity(formEl, inputEl, settings) {
-  // Если символы не соответствуют паттерну, устанавливаем пользовательское сообщение
-  if (inputEl.validity.patternMismatch && inputEl.dataset.errorMessage) {
-    inputEl.setCustomValidity(inputEl.dataset.errorMessage); // Устанавливаем кастомное сообщение
-  } else {
-    inputEl.setCustomValidity(""); // Сбрасываем кастомное сообщение
+  let customError = "";
+
+  if (inputEl.type === "url" && inputEl.value && !urlRegex.test(inputEl.value)) {
+    customError = "Введите корректную ссылку, например: https://example.com/image.jpg";
+  } else if (inputEl.value) {
+
+    const trimmed = inputEl.value.trim();
+
+    if (!letterRegex.test(trimmed)) {
+      customError = "Поле должно содержать хотя бы одну букву";
+    }
+
+    else if (doubleSpaceRegex.test(inputEl.value)) {
+      customError = "Два пробела подряд не допускаются";
+    }
+
+    else if (doubleHyphenRegex.test(inputEl.value)) {
+      customError = "Два дефиса подряд не допускаются";
+    }
+
+    else if (inputEl.validity.patternMismatch && inputEl.dataset.errorMessage) {
+      customError = inputEl.dataset.errorMessage;
+    }
   }
 
-  // Если поле валидно, скрываем ошибку, иначе показываем
+  inputEl.setCustomValidity(customError);
+
   if (inputEl.validity.valid) {
     hideInputError(formEl, inputEl, settings);
   } else {
@@ -34,70 +53,60 @@ function checkInputValidity(formEl, inputEl, settings) {
   }
 }
 
-// Функция проверки наличия хотя бы одного невалидного поля в списке
 function hasInvalidInput(inputList) {
-  // Возвращает true, если есть хотя бы одно невалидное поле
   return inputList.some((inputEl) => !inputEl.validity.valid);
 }
 
-// Функция отключения кнопки отправки формы
 function disableSubmitButton(buttonEl, settings) {
-  buttonEl.classList.add(settings.inactiveButtonClass); // Добавляем класс неактивной кнопки
-  buttonEl.disabled = true; // Блокируем кнопку
+  buttonEl.classList.add(settings.inactiveButtonClass);
+  buttonEl.disabled = true;
 }
 
-// Функция включения кнопки отправки формы
 function enableSubmitButton(buttonEl, settings) {
-  buttonEl.classList.remove(settings.inactiveButtonClass); // Убираем класс неактивной кнопки
-  buttonEl.disabled = false; // Разблокируем кнопку
+  buttonEl.classList.remove(settings.inactiveButtonClass);
+  buttonEl.disabled = false;
 }
 
-// Функция переключения состояния кнопки в зависимости от валидности всех полей
 function toggleButtonState(inputList, buttonEl, settings) {
   if (hasInvalidInput(inputList)) {
-    disableSubmitButton(buttonEl, settings); // Если есть ошибки, отключаем кнопку
+    disableSubmitButton(buttonEl, settings);
   } else {
-    enableSubmitButton(buttonEl, settings); // Если всё валидно, включаем кнопку
+    enableSubmitButton(buttonEl, settings);
   }
 }
 
-// Функция установки слушателей событий на форму и её поля
 function setEventListeners(formEl, settings) {
-  const inputList = Array.from(formEl.querySelectorAll(settings.inputSelector)); // Все поля ввода
-  const submitBtn = formEl.querySelector(settings.submitButtonSelector); // Кнопка отправки
+  const inputList = Array.from(formEl.querySelectorAll(settings.inputSelector));
+  const submitBtn = formEl.querySelector(settings.submitButtonSelector);
 
-  toggleButtonState(inputList, submitBtn, settings); // Устанавливаем начальное состояние кнопки
+  toggleButtonState(inputList, submitBtn, settings);
 
-  // Навешиваем обработчик на каждое поле ввода
   inputList.forEach((inputEl) => {
     inputEl.addEventListener("input", () => {
-      checkInputValidity(formEl, inputEl, settings); // Проверяем валидность при вводе
-      toggleButtonState(inputList, submitBtn, settings); // Обновляем состояние кнопки
+      // inputEl.value = inputEl.value.trimStart();
+
+      checkInputValidity(formEl, inputEl, settings);
+      toggleButtonState(inputList, submitBtn, settings);
     });
   });
 }
 
-// --- Публичные функции (экспортируются) ---
-// Эти функции используются извне модуля (в index.js)
-
-// Функция очистки валидации формы (вызывается при открытии модального окна)
 export function clearValidation(formEl, settings) {
-  const inputList = Array.from(formEl.querySelectorAll(settings.inputSelector)); // Все поля
-  const submitBtn = formEl.querySelector(settings.submitButtonSelector); // Кнопка
+  const inputList = Array.from(formEl.querySelectorAll(settings.inputSelector));
+  const submitBtn = formEl.querySelector(settings.submitButtonSelector);
 
-  // Сбрасываем ошибки для каждого поля
   inputList.forEach((inputEl) => {
-    hideInputError(formEl, inputEl, settings); // Скрываем визуальные ошибки
-    inputEl.setCustomValidity(""); // Очищаем кастомные сообщения валидации
+    hideInputError(formEl, inputEl, settings);
+    inputEl.setCustomValidity("");
   });
 
-  disableSubmitButton(submitBtn, settings); // Отключаем кнопку (форма будет считаться невалидной)
+  disableSubmitButton(submitBtn, settings);
 }
 
-// Функция включения валидации для всех форм на странице
 export function enableValidation(settings) {
-  const formList = Array.from(document.querySelectorAll(settings.formSelector)); // Находим все формы
+  const formList = Array.from(document.querySelectorAll(settings.formSelector));
+
   formList.forEach((formEl) => {
-    setEventListeners(formEl, settings); // Навешиваем обработчики на каждую форму
+    setEventListeners(formEl, settings);
   });
 }
