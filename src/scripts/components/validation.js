@@ -12,39 +12,12 @@ function hideInputError(formEl, inputEl, settings) {
   errorSpan.classList.remove(settings.errorClass);
 }
 
-const urlRegex = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
-
-const doubleSpaceRegex = /  /;
-const doubleHyphenRegex = /--/;
-const letterRegex = /[a-zA-Zа-яА-ЯёЁ]/;
-
 function checkInputValidity(formEl, inputEl, settings) {
-  let customError = "";
-
-  if (inputEl.type === "url" && inputEl.value && !urlRegex.test(inputEl.value)) {
-    customError = "Введите корректную ссылку, например: https://example.com/image.jpg";
-  } else if (inputEl.value) {
-
-    const trimmed = inputEl.value.trim();
-
-    if (!letterRegex.test(trimmed)) {
-      customError = "Поле должно содержать хотя бы одну букву";
-    }
-
-    else if (doubleSpaceRegex.test(inputEl.value)) {
-      customError = "Два пробела подряд не допускаются";
-    }
-
-    else if (doubleHyphenRegex.test(inputEl.value)) {
-      customError = "Два дефиса подряд не допускаются";
-    }
-
-    else if (inputEl.validity.patternMismatch && inputEl.dataset.errorMessage) {
-      customError = inputEl.dataset.errorMessage;
-    }
+  if (inputEl.validity.patternMismatch && inputEl.dataset.errorMessage) {
+    inputEl.setCustomValidity(inputEl.dataset.errorMessage);
+  } else {
+    inputEl.setCustomValidity("");
   }
-
-  inputEl.setCustomValidity(customError);
 
   if (inputEl.validity.valid) {
     hideInputError(formEl, inputEl, settings);
@@ -83,8 +56,6 @@ function setEventListeners(formEl, settings) {
 
   inputList.forEach((inputEl) => {
     inputEl.addEventListener("input", () => {
-      // inputEl.value = inputEl.value.trimStart();
-
       checkInputValidity(formEl, inputEl, settings);
       toggleButtonState(inputList, submitBtn, settings);
     });
