@@ -72,6 +72,8 @@
                 required
                 minlength="2"
                 maxlength="200"
+                pattern="^(?=.*[A-Za-zА-яЁё])[A-Za-zА-яЁё\s-]+$"
+                data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               />
               <span class="popup__error" id="user-description-error"></span>
             </label>
@@ -109,6 +111,8 @@
                 id="place-link"
                 class="popup__input popup__input_type_url"
                 placeholder="Ссылка на картинку"
+                pattern="https?://.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$"
+                data-error-message="Введите корректную ссылку на изображение"
                 required
               />
               <span class="popup__error" id="place-link-error"></span>
@@ -155,6 +159,8 @@
                 id="user-avatar"
                 class="popup__input popup__input_type_avatar"
                 placeholder="Ссылка на изображение"
+                pattern="https?://.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$"
+                data-error-message="Введите корректную ссылку на изображение"
                 required
               />
               <span class="popup__error" id="user-avatar-error"></span>
