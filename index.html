@@ -8,14 +8,14 @@
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Mesto</title>
-    <script type="module" crossorigin src="/mesto-production/assets/index-C8Pi-dwG.js"></script>
-    <link rel="stylesheet" crossorigin href="/mesto-production/assets/index-BBoac3kK.css">
+    <script type="module" crossorigin src="./assets/index-DVSsvKec.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D2z4Cjqv.css">
   </head>
   <body class="page">
     <div class="page__content">
       <header class="header page__section">
         <img
-          src="/mesto-production/assets/logo-C_QQpFK1.svg"
+          src="./assets/logo-C_QQpFK1.svg"
           alt="Логотип проекта место"
           class="logo header__logo"
         />
@@ -72,8 +72,6 @@
                 required
                 minlength="2"
                 maxlength="200"
-                pattern="^(?=.*[A-Za-zА-яЁё])[A-Za-zА-яЁё \-]+$"
-                data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               />
               <span class="popup__error" id="user-description-error"></span>
             </label>
@@ -111,8 +109,6 @@
                 id="place-link"
                 class="popup__input popup__input_type_url"
                 placeholder="Ссылка на картинку"
-                pattern="https?://.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$"
-                data-error-message="Введите корректную ссылку на изображение"
                 required
               />
               <span class="popup__error" id="place-link-error"></span>
@@ -159,8 +155,6 @@
                 id="user-avatar"
                 class="popup__input popup__input_type_avatar"
                 placeholder="Ссылка на изображение"
-                pattern="https?://.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$"
-                data-error-message="Введите корректную ссылку на изображение"
                 required
               />
               <span class="popup__error" id="user-avatar-error"></span>
